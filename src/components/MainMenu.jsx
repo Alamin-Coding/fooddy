@@ -59,6 +59,11 @@ const MainMenu = () => {
             </NavLink>
           </li>
           <li>
+            <NavLink onClick={() => menuHandler()} to={"/product"}>
+              Product
+            </NavLink>
+          </li>
+          <li>
             <NavLink onClick={() => menuHandler()} to={"/contact"}>
               Contact
             </NavLink>

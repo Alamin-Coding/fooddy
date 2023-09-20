@@ -12,11 +12,13 @@ import {
 import Layout from "./routes/Layout.jsx";
 import NotFound from "./routes/NotFound.jsx";
 import Contact from "./routes/Contact.jsx";
+import Product from "./routes/Product.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<NotFound />}>
       <Route index element={<App />} />
+      <Route path="/product" element={<Product />} />
       <Route path="/contact" element={<Contact />} />
     </Route>
   )
