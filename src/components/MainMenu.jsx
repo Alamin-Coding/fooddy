@@ -144,7 +144,7 @@ const Nav = styled.nav`
     position: fixed;
     left: -100%;
     top: 0;
-    z-index: 200;
+    z-index: 9999;
     transition: ease-in-out 0.3s;
 
     .header {
@@ -187,7 +187,7 @@ const Nav = styled.nav`
     background: rgba(17, 17, 17, 0.6);
     width: 100vw;
     height: 100vh;
-    z-index: 100;
+    z-index: 999;
     transition: all linear 0.3s;
     opacity: 0;
     visibility: hidden;

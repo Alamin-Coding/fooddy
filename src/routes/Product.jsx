@@ -2,7 +2,7 @@
 import { Card, Container } from "react-bootstrap";
 import getData from "../data/product";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Product = () => {
@@ -23,10 +23,15 @@ const Product = () => {
   getData.map((item) => company.push(item.company.toLowerCase()));
   const newCompany = [...new Set(company)];
 
+  const companyMenuList = Array.from(
+    document.querySelectorAll(".recommended ul li")
+  );
+
   useEffect(() => {
     setData(getData);
   }, []);
 
+  // CATEGORY FILTER
   const categoryHandler = (filterText) => {
     setData(
       getData.filter(
@@ -35,6 +40,7 @@ const Product = () => {
     );
   };
 
+  // COLOR FILTER
   const colorHandler = (filterText) => {
     setData(
       getData.filter(
@@ -43,6 +49,7 @@ const Product = () => {
     );
   };
 
+  // COMPANY FILTER
   const companyHandler = (filterText) => {
     setData(
       getData.filter(
@@ -51,80 +58,119 @@ const Product = () => {
     );
   };
 
+  // COMPANY MENU ACTIVE
+  companyMenuList.map((item) => {
+    item.addEventListener("click", () => {
+      companyMenuList.map((list) => list.classList.remove("active"));
+      item.classList.add("active");
+      let inputs = Array.from(document.querySelectorAll("input"));
+      inputs.map((input) => (input.checked = false));
+    });
+  });
+
+  // PRICE FILTER
+  const priceFilter = (min, max = 99999999) => {
+    setData(
+      getData.filter((item) => item.newPrice >= min && item.newPrice <= max)
+    );
+  };
+
   return (
     <Section>
       <Container className="fluid">
         <div className="product_container">
-          <div className="slide_bar">
-            <div className="filter_item_box">
-              <div className="category">
-                <h4>Category</h4>
-                <ul>
-                  <li onClick={() => setData(getData)}>All</li>
-                  {newCategory.map((item, index) => (
-                    <li key={index}>
+          <div className="left_side">
+            <div className="side_bar">
+              <div className="filter_item_box">
+                <div className="category">
+                  <h4>Category</h4>
+                  <ul>
+                    <li onClick={() => setData(getData)}>All</li>
+                    {newCategory.map((item, index) => (
+                      <li key={index}>
+                        <input
+                          type="radio"
+                          name="radio"
+                          onClick={() => categoryHandler(item)}
+                        />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="filter_item_box">
+                <div className="price">
+                  <h4>Price</h4>
+                  <ul>
+                    <li>
                       <input
                         type="radio"
                         name="radio"
-                        onClick={() => categoryHandler(item)}
+                        onClick={() => setData(getData)}
                       />
-                      {item}
+                      All
                     </li>
-                  ))}
-                </ul>
+                    <li>
+                      <input
+                        type="radio"
+                        name="radio"
+                        onClick={() => priceFilter(0, 60)}
+                      />
+                      $0 - $60
+                    </li>
+                    <li>
+                      <input
+                        type="radio"
+                        name="radio"
+                        onClick={() => priceFilter(60, 100)}
+                      />
+                      $60 - $100
+                    </li>
+                    <li>
+                      <input
+                        type="radio"
+                        name="radio"
+                        onClick={() => priceFilter(100, 199)}
+                      />
+                      $100 - $199
+                    </li>
+                    <li>
+                      <input
+                        type="radio"
+                        name="radio"
+                        onClick={() => priceFilter(200)}
+                      />
+                      Over $200
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
-            <div className="filter_item_box">
-              <div className="price">
-                <h4>Price</h4>
-                <ul>
-                  <li onClick={() => setData(getData)}>
-                    <input type="radio" name="radio" />
-                    All
-                  </li>
-                  <li onClick={() => setData(getData)}>
-                    <input type="radio" name="radio" />
-                    $0 - $60
-                  </li>
-                  <li onClick={() => setData(getData)}>
-                    <input type="radio" name="radio" />
-                    $60 - $100
-                  </li>
-                  <li onClick={() => setData(getData)}>
-                    <input type="radio" name="radio" />
-                    $100 - $200
-                  </li>
-                  <li onClick={() => setData(getData)}>
-                    <input type="radio" name="radio" />
-                    Over $200
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="filter_item_box">
-              <div className="colors">
-                <h4>Colors</h4>
-                <ul>
-                  <li onClick={() => setData(getData)}>
-                    <span
-                      style={{
-                        background:
-                          "linear-gradient(45deg, red, blue, white, black, green)",
-                      }}
-                      onClick={() => setData(getData)}
-                    ></span>
-                    All
-                  </li>
-                  {newColor.map((item, index) => (
-                    <li key={index}>
+              <div className="filter_item_box">
+                <div className="colors">
+                  <h4>Colors</h4>
+                  <ul>
+                    <li onClick={() => setData(getData)}>
                       <span
-                        style={{ background: `${item}` }}
-                        onClick={() => colorHandler(item)}
+                        style={{
+                          background:
+                            "linear-gradient(45deg, red, blue, white, black, green)",
+                        }}
+                        onClick={() => setData(getData)}
                       ></span>
-                      {item}
+                      All
                     </li>
-                  ))}
-                </ul>
+                    {newColor.map((item, index) => (
+                      <li key={index}>
+                        <span
+                          style={{ background: `${item}` }}
+                          onClick={() => colorHandler(item)}
+                        ></span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -132,7 +178,9 @@ const Product = () => {
             <div className="recommended">
               <h3>Recommended</h3>
               <ul>
-                <li onClick={() => setData(getData)}>All</li>
+                <li className="active" onClick={() => setData(getData)}>
+                  All
+                </li>
                 {newCompany?.map((item, index) => (
                   <li key={index} onClick={() => companyHandler(item)}>
                     {item}
@@ -175,42 +223,51 @@ const Section = styled.section`
     display: grid;
     grid-template-columns: 1fr 6fr;
     gap: 20px;
-
-    .filter_item_box {
-      padding-bottom: 40px;
-      &:last-child {
-        padding-bottom: 0;
-      }
-      h4 {
-        color: #079841;
-        font-size: 20px;
-        font-weight: 700;
-        padding-bottom: 5px;
-      }
-      ul {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        li {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          line-height: 1;
-          user-select: none;
-          input {
-            cursor: pointer;
+    .left_side {
+      position: relative;
+      .side_bar {
+        background: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 400;
+        .filter_item_box {
+          padding-bottom: 40px;
+          &:last-child {
+            padding-bottom: 0;
           }
-        }
-      }
-      .colors {
-        ul {
-          li {
-            span {
-              display: inline-block;
-              width: 15px;
-              height: 15px;
-              border-radius: 50%;
-              border: 1px solid #fedfde;
+          h4 {
+            color: #079841;
+            font-size: 20px;
+            font-weight: 700;
+            padding-bottom: 5px;
+          }
+          ul {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            li {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              line-height: 1;
+              user-select: none;
+              input {
+                cursor: pointer;
+              }
+            }
+          }
+          .colors {
+            ul {
+              li {
+                span {
+                  display: inline-block;
+                  width: 15px;
+                  height: 15px;
+                  border-radius: 50%;
+                  border: 1px solid #fedfde;
+                  cursor: pointer;
+                }
+              }
             }
           }
         }
@@ -219,7 +276,12 @@ const Section = styled.section`
   }
 
   .right_side {
+    position: relative;
     .recommended {
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 400;
       ul {
         padding-top: 10px;
         padding-bottom: 30px;
@@ -237,8 +299,11 @@ const Section = styled.section`
           cursor: pointer;
           transition: all linear 0.3s;
           &:hover {
-            background: #19374f;
+            background: #079841;
           }
+        }
+        .active {
+          background: #079841;
         }
       }
     }
