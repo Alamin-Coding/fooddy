@@ -5,13 +5,13 @@ import { Image } from "react-bootstrap";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 const images = [
   {
-    url: "../public/images/banner-1.jpg",
+    url: "https://i.ibb.co/0VNy2HB/banner-2.jpg",
   },
   {
-    url: "../public/images/banner-2.jpg",
+    url: "https://i.ibb.co/MDvMn0p/banner-1.jpg",
   },
   {
-    url: "../public/images/banner-3.jpg",
+    url: "https://i.ibb.co/0DmvBCC/banner-3.jpg",
   },
 ];
 

@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Card, Container } from "react-bootstrap";
-import getData from "../data/product";
+import getData from "../data/foodData";
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Product = () => {
@@ -14,9 +14,9 @@ const Product = () => {
   const newCategory = [...new Set(categories)];
 
   // COLOR
-  const colors = [];
-  getData.map((item) => colors.push(item.color.toLowerCase()));
-  const newColor = [...new Set(colors)];
+  const flavours = [];
+  getData.map((item) => flavours.push(item.flavours.toLowerCase()));
+  const newFlavours = [...new Set(flavours)];
 
   // COMPANY
   const company = [];
@@ -41,10 +41,10 @@ const Product = () => {
   };
 
   // COLOR FILTER
-  const colorHandler = (filterText) => {
+  const flavoursHandler = (filterText) => {
     setData(
       getData.filter(
-        (item) => item.color.toLowerCase() === filterText.toLowerCase()
+        (item) => item.flavours.toLowerCase() === filterText.toLowerCase()
       )
     );
   };
@@ -85,7 +85,15 @@ const Product = () => {
                 <div className="category">
                   <h4>Category</h4>
                   <ul>
-                    <li onClick={() => setData(getData)}>All</li>
+                    <li>
+                      <input
+                        type="radio"
+                        name="radio"
+                        onClick={() => setData(getData)}
+                      />
+                      <span className="checkmark"></span>
+                      All
+                    </li>
                     {newCategory.map((item, index) => (
                       <li key={index}>
                         <input
@@ -93,6 +101,7 @@ const Product = () => {
                           name="radio"
                           onClick={() => categoryHandler(item)}
                         />
+                        <span className="checkmark"></span>
                         {item}
                       </li>
                     ))}
@@ -109,6 +118,7 @@ const Product = () => {
                         name="radio"
                         onClick={() => setData(getData)}
                       />
+                      <span className="checkmark"></span>
                       All
                     </li>
                     <li>
@@ -117,6 +127,7 @@ const Product = () => {
                         name="radio"
                         onClick={() => priceFilter(0, 60)}
                       />
+                      <span className="checkmark"></span>
                       $0 - $60
                     </li>
                     <li>
@@ -125,6 +136,7 @@ const Product = () => {
                         name="radio"
                         onClick={() => priceFilter(60, 100)}
                       />
+                      <span className="checkmark"></span>
                       $60 - $100
                     </li>
                     <li>
@@ -133,6 +145,7 @@ const Product = () => {
                         name="radio"
                         onClick={() => priceFilter(100, 199)}
                       />
+                      <span className="checkmark"></span>
                       $100 - $199
                     </li>
                     <li>
@@ -141,6 +154,7 @@ const Product = () => {
                         name="radio"
                         onClick={() => priceFilter(200)}
                       />
+                      <span className="checkmark"></span>
                       Over $200
                     </li>
                   </ul>
@@ -148,23 +162,33 @@ const Product = () => {
               </div>
               <div className="filter_item_box">
                 <div className="colors">
-                  <h4>Colors</h4>
+                  <h4>Flavours</h4>
                   <ul>
-                    <li onClick={() => setData(getData)}>
+                    <li>
+                      <input
+                        type="radio"
+                        name="radio"
+                        onClick={() => setData(getData)}
+                      />
                       <span
+                        className="checkmark"
                         style={{
                           background:
                             "linear-gradient(45deg, red, blue, white, black, green)",
                         }}
-                        onClick={() => setData(getData)}
                       ></span>
                       All
                     </li>
-                    {newColor.map((item, index) => (
+                    {newFlavours.map((item, index) => (
                       <li key={index}>
+                        <input
+                          type="radio"
+                          name="radio"
+                          onClick={() => flavoursHandler(item)}
+                        />
                         <span
                           style={{ background: `${item}` }}
-                          onClick={() => colorHandler(item)}
+                          className="checkmark"
                         ></span>
                         {item}
                       </li>
@@ -176,6 +200,7 @@ const Product = () => {
           </div>
           <div className="right_side">
             <div className="recommended">
+              {/* COMPANY */}
               <h3>Recommended</h3>
               <ul>
                 <li className="active" onClick={() => setData(getData)}>
@@ -221,7 +246,7 @@ const Section = styled.section`
   padding: 60px 0;
   .product_container {
     display: grid;
-    grid-template-columns: 1fr 6fr;
+    grid-template-columns: 1fr 4fr;
     gap: 20px;
     .left_side {
       position: relative;
@@ -251,7 +276,32 @@ const Section = styled.section`
               gap: 10px;
               line-height: 1;
               user-select: none;
+              position: relative;
               input {
+                cursor: pointer;
+                opacity: 0;
+                position: absolute;
+                left: 0;
+              }
+              input:checked ~ .checkmark {
+                position: relative;
+                background: #079841;
+                &::after {
+                  position: absolute;
+                  content: "";
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 50%;
+                  background: #e1e1e1;
+                  left: 4px;
+                  top: 4px;
+                }
+              }
+              .checkmark {
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                background: #e1e1e1;
                 cursor: pointer;
               }
             }
@@ -264,7 +314,6 @@ const Section = styled.section`
                   width: 15px;
                   height: 15px;
                   border-radius: 50%;
-                  border: 1px solid #fedfde;
                   cursor: pointer;
                 }
               }
@@ -315,6 +364,12 @@ const Section = styled.section`
       .card {
         .image {
           position: relative;
+          img {
+            height: 160px;
+            object-fit: cover;
+            height: 160px;
+            width: 100%;
+          }
           span {
             position: absolute;
             top: 10px;
